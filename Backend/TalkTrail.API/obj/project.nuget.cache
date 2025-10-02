@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "P/AQLrqO84A=",
+  "success": true,
+  "projectFilePath": "D:\\Vivek\\Projects\\TalkTrail\\Backend\\TalkTrail.API\\TalkTrail.API.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Abhishek\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.8\\microsoft.aspnetcore.openapi.9.0.8.nupkg.sha512",
+    "C:\\Users\\Abhishek\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
