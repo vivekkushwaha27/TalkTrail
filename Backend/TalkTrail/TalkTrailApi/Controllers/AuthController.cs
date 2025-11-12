@@ -29,6 +29,8 @@ namespace TalkTrail.Api.Controllers
         {
             try
             {
+                request.Username = request.Username.ToLower().Trim();
+
                 if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
                     return BadRequest(new { message = "Username and password are required." });
 
@@ -108,7 +110,8 @@ namespace TalkTrail.Api.Controllers
 
             var claims = new[]
             {
-                new Claim("username", user.Username)
+                new Claim("userId", user.Id.ToString()),
+                new Claim("username", user.Username)                
             };
 
             var token = new JwtSecurityToken(
