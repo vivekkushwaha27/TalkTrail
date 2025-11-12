@@ -1,0 +1,50 @@
+# Visual Studio cache
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+bin/
+obj/
+out/
+publish/
+
+# Logs and temp
+*.log
+*.tmp
+*.temp
+
+# Compiled DLLs and EXEs
+*.dll
+*.exe
+
+# Coverage / Test files
+TestResult*/
+*.coverage
+*.coveragexml
+
+# Entity Framework migrations backups
+*MigrationsBackup/
+
+# Rider / VS Code
+.idea/
+.vscode/
+
+# ASP.NET temp files
+App_Data/
+*.dbmdl
+
+# Frontend (Angular / React)
+
+node_modules/
+dist/
+build/
+.env
+.env.local
+package-lock.json
+yarn.lock
+
+.DS_Store
+Thumbs.db
