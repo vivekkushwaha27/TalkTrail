@@ -47,7 +47,7 @@ namespace TalkTrail.Api.Controllers
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
 
-                return Ok("Registered Successfully");
+                return Ok("Registered successfully");
             }
             catch (Exception ex)
             {
