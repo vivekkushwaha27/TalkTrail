@@ -16,21 +16,22 @@ export class Register implements OnInit {
   constructor(private router: Router, private authService: AuthService) { }
 
   ngOnInit(): void {
-    if (this.authService.isLoggedIn()) {
-
+    if(this.authService.isLoggedIn()){
+     this.router.navigate(['/chat']);
     }
   }
 
   register() {
+    const user = {
+      username: this.username?.trim(),
+      password: this.password?.trim()
+    };
+    
     if (!this.username || !this.password) {
       alert('Please enter valid username & password');
       return;
     }
 
-    const user = {
-      username: this.username?.trim(),
-      password: this.password?.trim()
-    };
     this.authService.signup(user).subscribe({
       next: (response) => {
         alert(response);

@@ -31,7 +31,10 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+    if (typeof localStorage !== 'undefined') {
+      return localStorage.getItem(this.TOKEN_KEY);
+    }
+    return null;
   }
 
   private decodeToken(): any | null {
@@ -58,7 +61,7 @@ export class AuthService {
   getUsers(): Observable<any> {
     const token = this.getToken();
     return this.http.get(`${this.BASE_URL}/get-users`, {
-      headers: { Authorization: `Bearer ${token}`}
+      headers: { Authorization: `Bearer ${token}` }
     });
   }
 }
