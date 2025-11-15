@@ -17,7 +17,6 @@ import { Router } from '@angular/router';
 export class ChatPage implements OnInit, OnDestroy {
 
   user: any = "";
-
   users: any[] = [];
   groups: any[] = [];
   selectedUser: any = null;
@@ -35,7 +34,7 @@ export class ChatPage implements OnInit, OnDestroy {
     this.user = this.authService.getUserName();
 
     this.loadAllUsers();
-    this.loadGroups();
+    // this.loadGroups();
   }
 
   ngOnDestroy(): void {

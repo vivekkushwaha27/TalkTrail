@@ -82,20 +82,58 @@ namespace TalkTrail.Api.Controllers
 
         [Authorize]
         [HttpGet("search")]
-        public async Task<IActionResult> Search([FromQuery] string query)
+        public async Task<IActionResult> Search([FromRoute] int Id)
         {
             try
             {
-                var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+                var currentUserId = int.Parse(User.FindFirst("userId")?.Value ?? "0");
 
                 var users = await _context.Users
-                    .Where(u => u.Username.Contains(query) && u.Id != currentUserId)
+                    .Where(u => u.Id == Id && u.Id != currentUserId)
                     .Select(u => new UserDto { Id = u.Id, Username = u.Username })
                     .ToListAsync();
 
                 return Ok(users);
             }
             catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("get-users")]
+        public async Task<IActionResult> GetUsers()
+        {
+            try
+            {
+                var currentUserId = int.Parse(User.FindFirst("userId")?.Value ?? "0");
+
+                var users = await _context.Users
+                    .Where(u => u.Id != currentUserId)
+                    .Select(u => new UserDto { Id = u.Id, Username = u.Username })
+                    .ToListAsync();
+
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("get-all-users")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            try
+            {
+                var users = await _context.Users
+                    .Select(u => new UserDto { Id = u.Id, Username = u.Username })
+                    .ToListAsync();
+                return Ok(users);
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
