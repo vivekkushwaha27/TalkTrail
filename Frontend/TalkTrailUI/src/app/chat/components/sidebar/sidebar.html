@@ -1,0 +1,46 @@
+<div class="sidebar">
+  <div class="sidebar-header">
+    <h3>Hi, {{ user }}</h3>
+    <button class="logout-button" (click)="onLogout()">Logout</button>
+  </div>
+
+  <div class="tab-row">
+    <div class="tab" [class.active]="activeTab === 'users'" (click)="switchTab('users')">
+      Users
+    </div>
+    <div class="tab" [class.active]="activeTab === 'groups'" (click)="switchTab('groups')">
+      Groups
+    </div>
+  </div>
+
+  <div *ngIf="activeTab === 'users'" class="search-area">
+    <input
+      class="search-input"
+      placeholder="Search users..."
+      [(ngModel)]="searchQuery"
+      (keydown.enter)="onSearch()" />
+    <button class="search-button" (click)="onSearch()">Search</button>
+  </div>
+
+  <!-- Users list -->
+  <div class="items-list" *ngIf="activeTab === 'users'">
+    <div
+      class="list-item"
+      *ngFor="let u of users"
+      [class.active]="selectedUser?.id === u.id"
+      (click)="selectUser.emit(u)">
+      {{ u.username }}
+    </div>
+  </div>
+
+  <!-- Groups list -->
+  <div class="items-list" *ngIf="activeTab === 'groups'">
+    <div
+      class="list-item"
+      *ngFor="let g of groups"
+      [class.active]="selectedGroup?.id === g.id"
+      (click)="selectGroup.emit(g)">
+      {{ g.name }}
+    </div>
+  </div>
+</div>

@@ -54,4 +54,11 @@ export class AuthService {
     const decoded = this.decodeToken();
     return decoded?.username || null;
   }
+
+  getUsers(): Observable<any> {
+    const token = this.getToken();
+    return this.http.get(`${this.BASE_URL}/get-users`, {
+      headers: { Authorization: `Bearer ${token}`}
+    });
+  }
 }

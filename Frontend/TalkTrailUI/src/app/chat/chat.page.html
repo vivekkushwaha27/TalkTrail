@@ -1,0 +1,22 @@
+<div class="chat-container">
+  <app-sidebar
+    [user]="user"
+    [users]="users"
+    [groups]="groups"
+    [selectedUser]="selectedUser"
+    [selectedGroup]="selectedGroup"
+    (selectUser)="onSelectUser($event)"
+    (selectGroup)="onSelectGroup($event)"
+    (logoutEvent)="onLogout()"
+    (searchEvent)="onSearchUsers($event)"
+  ></app-sidebar>
+
+  <app-chat-window
+    [currentUser]="user"
+    [selectedUser]="selectedUser"
+    [selectedGroup]="selectedGroup"
+    [messages]="messages"
+    (sendMessage)="onSendMessage($event)"
+    (deleteMessage)="onDeleteMessage($event)"
+  ></app-chat-window>
+</div>

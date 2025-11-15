@@ -1,0 +1,92 @@
+.sidebar {
+  width: 320px;
+  background-color: #2a2f38;
+  color: #fff;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #3a3f47;
+  height: 100%
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logout-button {
+  background-color: #d9534f;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+}
+
+.tab-row {
+  display: flex;
+  margin-top: 15px;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 8px;
+  cursor: pointer;
+  color: #ccc;
+  border-bottom: 2px solid transparent;
+}
+
+.tab.active {
+  color: #fff;
+  border-bottom: 2px solid #0078d7;
+}
+
+.search-area {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.search-input {
+  flex: 1;
+  background: #1e1f24;
+  border: 1px solid #3a3f47;
+  border-radius: 6px;
+  padding: 10px;
+  color: #fff;
+}
+
+.search-button {
+  background: #0078d7;
+  border: none;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.items-list {
+  overflow-y: auto;
+  margin-top: 15px;
+  flex: 1;
+}
+
+.list-item {
+  padding: 12px;
+  margin-bottom: 6px;
+  border-radius: 6px;
+  background: #2a2f38;
+  cursor: pointer;
+  transition: background .2s;
+  border: 1px solid #3a3f47;
+}
+
+.list-item:hover {
+  background-color: #3b4b62;
+}
+
+.list-item.active {
+  background-color: #0078d7;
+}
