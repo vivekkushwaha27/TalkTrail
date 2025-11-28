@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
@@ -58,10 +58,37 @@ export class AuthService {
     return decoded?.username || null;
   }
 
+  // getUsers(): Observable<any> {
+  //   const token = this.getToken();
+  //   return this.http.get(`${this.BASE_URL}/get-users`, {
+  //     headers: { Authorization: `Bearer ${token}` }
+  //   });
+  // }
+
   getUsers(): Observable<any> {
     const token = this.getToken();
     return this.http.get(`${this.BASE_URL}/get-users`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
+      headers: { Authorization: `Bearer ${token}` },
+      responseType: 'text'
+    }).pipe(
+      map(res => JSON.parse(res))
+    );
+  }
+
+  // getUserByUsername(username: string): Observable<any> {
+  //   const token = this.getToken();
+  //   return this.http.get(`${this.BASE_URL}/get-user/${username}`, {
+  //     headers: { Authorization: `Bearer ${token}` }
+  //   });
+  // }
+
+  getUserByUsername(username: string): Observable<any> {
+    const token = this.getToken();
+    return this.http.get(`${this.BASE_URL}/get-user/${username}`, {
+      headers: { Authorization: `Bearer ${token}` },
+      responseType: 'text'
+    }).pipe(
+      map(res => JSON.parse(res))
+    );
   }
 }

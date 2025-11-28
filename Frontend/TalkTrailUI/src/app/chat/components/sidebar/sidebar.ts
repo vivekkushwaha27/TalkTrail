@@ -20,14 +20,15 @@ export class Sidebar {
   @Output() selectGroup = new EventEmitter<any>();
   @Output() logoutEvent = new EventEmitter<void>();
   @Output() searchEvent = new EventEmitter<string>();
+  @Output() loadAllUsers = new EventEmitter<void>();
 
   activeTab: 'users' | 'groups' = 'users';
-  searchQuery = '';
+  searchUser = '';
 
   switchTab(tab: 'users' | 'groups') {
     this.activeTab = tab;
     if (tab === 'groups') {
-      this.searchQuery = '';
+      this.searchUser = '';
       this.searchEvent.emit('');
     }
   }
@@ -37,6 +38,12 @@ export class Sidebar {
   }
 
   onSearch() {
-    this.searchEvent.emit(this.searchQuery);
+    this.searchEvent.emit(this.searchUser);
+  }
+
+  onInputChange(){
+    if(!this.searchUser){
+      this.loadAllUsers.emit();
+    }
   }
 }

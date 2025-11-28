@@ -26,10 +26,11 @@ export class ChatWindow implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     // scroll to bottom whenever messages change
     setTimeout(() => {
-      if (this.bottomRef) {
-        this.bottomRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
+      const el = this.bottomRef?.nativeElement;
+      if (el && typeof el.scrollIntoView === 'function') {
+        el.scrollIntoView({ behavior: 'smooth' });
       }
-    }, 50);
+    }, 0);
   }
 
   onSend() {

@@ -81,21 +81,22 @@ namespace TalkTrail.Api.Controllers
         }
 
         [Authorize]
-        [HttpGet("search")]
-        public async Task<IActionResult> Search([FromRoute] int Id)
+        [HttpGet("get-user/{username}")]
+        public async Task<IActionResult> GetByUsername([FromRoute] string username)
         {
             try
             {
-                var currentUserId = int.Parse(User.FindFirst("userId")?.Value ?? "0");
+                var currentUser = User.FindFirst("username")?.Value ?? "";
 
-                var users = await _context.Users
-                    .Where(u => u.Id == Id && u.Id != currentUserId)
-                    .Select(u => new UserDto { Id = u.Id, Username = u.Username })
-                    .ToListAsync();
+                var user = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Username.Equals(username) && u.Username != currentUser);
 
-                return Ok(users);
+                if (user == null)
+                    return NotFound("User not found.");
+
+                return Ok(new UserDto { Id = user.Id, Username = user.Username });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
