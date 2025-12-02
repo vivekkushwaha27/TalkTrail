@@ -8,9 +8,9 @@
     <div class="tab" [class.active]="activeTab === 'users'" (click)="switchTab('users')">
       Users
     </div>
-    <div class="tab" [class.active]="activeTab === 'groups'" (click)="switchTab('groups')">
+    <!-- <div class="tab" [class.active]="activeTab === 'groups'" (click)="switchTab('groups')">
       Groups
-    </div>
+    </div> -->
   </div>
 
   <div *ngIf="activeTab === 'users'" class="search-area">

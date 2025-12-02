@@ -28,11 +28,11 @@ export class ChatPage implements OnInit, OnDestroy {
   constructor(private chatService: ChatService, private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
-    if(!this.authService.isLoggedIn()){
+    if (!this.authService.isLoggedIn()) {
       this.router.navigate(['/']);
     }
-    this.user = this.authService.getUserName();
 
+    this.user = this.authService.getUserName();
     this.loadAllUsers();
     // this.loadGroups();
   }
@@ -43,37 +43,39 @@ export class ChatPage implements OnInit, OnDestroy {
 
   loadAllUsers() {
     this.authService.getUsers().subscribe({
-      next: (res) => {
-        console.log(res);
-        this.users = res;
-      },
-      error: () => alert('Error fetching users')
+      next: (res) => this.users = Array.isArray(res) ? res : res.users ?? [],
+      error: () => console.error('Error fetching users')
     });
   }
 
   loadGroups() {
     this.chatService.getGroups().subscribe({
       next: (res) => (this.groups = res),
-      error: (err) => console.error('Error fetching groups', err)
+      error: (err) => alert('Error fetching groups')
     });
   }
 
-  onSearchUsers(query: string) {
-    if (!query.trim()) {
-      this.loadAllUsers();
+  onSearchUsers(username: string) {
+    if (!username || username.trim() === '') {
+      alert("Please enter a valid username");
       return;
     }
-    this.chatService.searchUsers(query).subscribe({
-      next: (res) => (this.users = res),
-      error: () => alert('Error searching users')
+    this.authService.getUserByUsername(username.trim()).subscribe({
+      next: (res) => {
+        this.users = Array.isArray(res) ? res : [res];        
+      },
+      error: (error) => {
+        this.users = [];
+        alert(error.error);
+      }
     });
   }
 
-  onSelectUser(u: any) {
-    this.selectedUser = u;
+  onSelectUser(user: any) {
+    this.selectedUser = user;
     this.selectedGroup = null;
     this.messages = [];
-    this.fetchUserMessages(u.id);
+    this.fetchUserMessages(user.id);
     this.startPolling();
   }
 
@@ -86,9 +88,7 @@ export class ChatPage implements OnInit, OnDestroy {
   }
 
   onLogout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    window.location.href = '/login';
+    this.authService.logout();
   }
 
 
@@ -110,6 +110,7 @@ export class ChatPage implements OnInit, OnDestroy {
     if (!text.trim()) return;
 
     if (this.selectedUser) {
+      console.log(this.selectedUser,text);
       this.chatService.sendMessage(this.selectedUser.id, text).subscribe({
         next: (res) => {
           const msg = res.data || res;

@@ -18,34 +18,26 @@ export class ChatService {
         'Content-Type': 'application/json'
       })
     };
-  }
-
-  searchUsers(query: string): Observable<any> {
-    return this.http.get(
-      `${environment.BASE_URL}/api/auth/search?query=${query}`,
-      this.getHeaders()
-    );
-  }
- 
+  } 
 
   getChatMessages(userId: number): Observable<any> {
     return this.http.get(
-      `${environment.BASE_URL}/api/messages/conversation/${userId}`,
+      `${environment.BASE_URL}/messages/conversation/${userId}`,
       this.getHeaders()
     );
   }
 
   sendMessage(receiverId: number, message: string): Observable<any> {
     return this.http.post(
-      `${environment.BASE_URL}/api/messages/send`,
-      { receiver_id: receiverId, message },
+      `${environment.BASE_URL}/messages/send`,
+      { receiverId: receiverId, message: message },
       this.getHeaders()
     );
   }
 
   deleteMessage(messageId: number): Observable<any> {
     return this.http.delete(
-      `${environment.BASE_URL}/api/messages/${messageId}`,
+      `${environment.BASE_URL}/messages/${messageId}`,
       this.getHeaders()
     );
   }
@@ -53,14 +45,14 @@ export class ChatService {
 
   getGroups(): Observable<any> {
     return this.http.get(
-      `${environment.BASE_URL}/api/groups`,
+      `${environment.BASE_URL}/groups`,
       this.getHeaders()
     );
   }
 
   createGroup(name: string, members: number[]): Observable<any> {
     return this.http.post(
-      `${environment.BASE_URL}/api/groups`,
+      `${environment.BASE_URL}/groups`,
       { name, members },
       this.getHeaders()
     );
@@ -68,7 +60,7 @@ export class ChatService {
 
   addMembers(groupId: number, members: number[]): Observable<any> {
     return this.http.post(
-      `${environment.BASE_URL}/api/groups/${groupId}/add-members`,
+      `${environment.BASE_URL}/groups/${groupId}/add-members`,
       { members },
       this.getHeaders()
     );
@@ -78,14 +70,14 @@ export class ChatService {
 
   getGroupMessages(groupId: number): Observable<any> {
     return this.http.get(
-      `${environment.BASE_URL}/api/groups/${groupId}/messages`,
+      `${environment.BASE_URL}/groups/${groupId}/messages`,
       this.getHeaders()
     );
   }
 
   sendGroupMessage(groupId: number, message: string): Observable<any> {
     return this.http.post(
-      `${environment.BASE_URL}/api/groups/${groupId}/messages`,
+      `${environment.BASE_URL}/groups/${groupId}/messages`,
       { message },
       this.getHeaders()
     );
@@ -93,7 +85,7 @@ export class ChatService {
 
   deleteGroupMessage(groupId: number, msgId: number): Observable<any> {
     return this.http.delete(
-      `${environment.BASE_URL}/api/groups/${groupId}/messages/${msgId}`,
+      `${environment.BASE_URL}/groups/${groupId}/messages/${msgId}`,
       this.getHeaders()
     );
   }

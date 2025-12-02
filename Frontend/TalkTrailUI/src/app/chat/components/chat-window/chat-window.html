@@ -4,44 +4,36 @@
   </div>
 
   <div class="messages">
-    <div
-      class="message"
-      *ngFor="let msg of messages"
-      [ngClass]="{
-        'message-mine': msg.senderId === currentUser?.id || msg.sender_id === currentUser?.id,
-        'message-other': msg.senderId !== currentUser?.id && msg.sender_id !== currentUser?.id
-      }"
-    >
-      <div *ngIf="selectedGroup && (msg.senderName || msg.sender_name)" class="sender-name">
-        {{ msg.senderName || msg.sender_name }}
+    <div class="message" *ngFor="let msg of messages" [ngClass]="{
+        'message-mine': msg.senderName === currentUser,
+        'message-other': msg.senderName !== currentUser
+      }">
+      <div *ngIf="selectedGroup && msg.senderName" class="sender-name">
+        {{ msg.senderName }}
       </div>
 
       <div class="message-text">
-        {{ msg.message }}
+        {{ msg.content }}
       </div>
 
       <div class="message-meta">
         <span class="time">
           <!-- time from API if provided, fallback to now -->
-          {{ (msg.sent_time || msg.sentTime) || '' }}
+          {{ msg.sentTime || '' }}
         </span>
-        <span
-          class="delete"
-          *ngIf="msg.senderId === currentUser?.id || msg.sender_id === currentUser?.id"
-          (click)="onDelete(msg)"
-          title="Delete message"
-        >🗑</span>
+        <span class="delete" *ngIf="msg.senderName === currentUser"
+          (click)="onDelete(msg)" title="Delete message">🗑</span>
       </div>
     </div>
     <div #bottomRef></div>
   </div>
 
+  <div class="empty-state" *ngIf="(selectedUser || selectedGroup) && (!messages || messages.length === 0)">
+    <h3>Say "Hi" 👋 to start a conversation.</h3>
+  </div>
+
   <div class="message-input-container" *ngIf="selectedUser || selectedGroup">
-    <input
-      class="message-input"
-      [(ngModel)]="newMessage"
-      placeholder="Type a message..."
-      (keydown.enter)="onSend()" />
+    <input class="message-input" [(ngModel)]="newMessage" placeholder="Type a message..." (keydown.enter)="onSend()" />
     <button class="send-button" (click)="onSend()">Send</button>
   </div>
 

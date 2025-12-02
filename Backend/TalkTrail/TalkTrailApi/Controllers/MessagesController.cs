@@ -61,7 +61,7 @@ namespace TalkTrail.Api.Controllers
             {
                 return BadRequest(ex.Message);
             }
-        }
+        }        
 
         [HttpGet("conversation/{userId}")]
         public async Task<IActionResult> GetConversation(int userId)
