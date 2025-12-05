@@ -12,33 +12,38 @@ import { AuthService } from '../../services/auth';
 export class Register implements OnInit {
   username = '';
   password = '';
+  registerBtnClicked: boolean = false;
 
   constructor(private router: Router, private authService: AuthService) { }
 
   ngOnInit(): void {
-    if(this.authService.isLoggedIn()){
-     this.router.navigate(['/chat']);
+    if (this.authService.isLoggedIn()) {
+      this.router.navigate(['/chat']);
     }
   }
 
   register() {
+    if (!this.username?.trim() || !this.password?.trim()) {
+      alert('Please enter a valid username and password');
+      return;
+    }
+
+    if(this.registerBtnClicked) return;
+    this.registerBtnClicked = true;
+
     const user = {
       username: this.username?.trim(),
       password: this.password?.trim()
     };
-    
-    if (!this.username || !this.password) {
-      alert('Please enter valid username & password');
-      return;
-    }
 
     this.authService.signup(user).subscribe({
       next: (response) => {
         alert(response);
-        console.log(response);
+        this.registerBtnClicked = false;
       },
       error: (error) => {
         alert(error?.error?.message);
+        this.registerBtnClicked = false;
       }
     });
   }

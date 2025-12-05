@@ -12,6 +12,7 @@ import { AuthService } from '../../services/auth';
 export class Login implements OnInit {
   username = '';
   password = '';
+  loginBtnClicked: boolean = false;
 
   constructor(private router: Router, private authService: AuthService) { }
 
@@ -21,7 +22,14 @@ export class Login implements OnInit {
     }
   }
 
-  login() {
+  login() {    
+    if (!this.username?.trim() || !this.password?.trim()) {
+      console.log('Please enter a valid username and password');
+      return;
+    }
+    if(this.loginBtnClicked) return;
+    this.loginBtnClicked = true;
+
     const user = {
       username: this.username,
       password: this.password
@@ -29,10 +37,12 @@ export class Login implements OnInit {
     this.authService.login(user).subscribe({
       next: (response) => {
         this.authService.setToken(response);
+        this.loginBtnClicked = false;
         this.router.navigate(['/chat']);
       },
       error: (error) => {
         alert("Invalid login");
+        this.loginBtnClicked = false;
       }
     });
   }
