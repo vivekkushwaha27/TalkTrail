@@ -5,6 +5,7 @@ import { ChatWindow } from './components/chat-window/chat-window';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { AuthService } from '../services/auth';
 import { Router } from '@angular/router';
+import { LoaderService } from '../services/loader.service';
 
 @Component({
   selector: 'app-chat-page',
@@ -28,7 +29,8 @@ export class ChatPage implements OnInit, OnDestroy {
     private chatService: ChatService,
     private authService: AuthService,
     private router: Router,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private loaderService: LoaderService
   ) {}
 
   ngOnInit(): void {
@@ -46,14 +48,17 @@ export class ChatPage implements OnInit, OnDestroy {
   }
 
   loadAllUsers() {
+    this.loaderService.show();
     this.authService.getUsers().subscribe({
       next: (res) => {
         const data = Array.isArray(res) ? res : res.users ?? [];
         this.users = [...data];
         this.cd.detectChanges();
+        this.loaderService.hide();
       },
       error: (error) => {
         console.log('Error fetching users: ', error);
+        this.loaderService.hide();
       }
     });
   }
@@ -64,15 +69,18 @@ export class ChatPage implements OnInit, OnDestroy {
       this.loadAllUsers();
       return;
     }
+    this.loaderService.show();
     this.authService.getUserByUsername(term).subscribe({
       next: (res) => {
         this.users = Array.isArray(res) ? res : [res];
         this.cd.detectChanges();
+        this.loaderService.hide();
       },
       error: (error) => {
         this.users = [];
         this.cd.detectChanges();
         alert(error.error || 'User not found');
+        this.loaderService.hide();
       }
     });
   }
@@ -103,7 +111,9 @@ export class ChatPage implements OnInit, OnDestroy {
         this.messages = Array.isArray(res) ? res : res.messages || [];
         this.cd.detectChanges();
       },
-      error: (err) => console.log('Error fetching user messages', err)
+      error: (err) => {
+        console.log('Error fetching user messages', err);
+      }
     });
   }
 

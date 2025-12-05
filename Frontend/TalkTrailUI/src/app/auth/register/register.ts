@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth';
+import { LoaderService } from '../../services/loader.service';
 
 @Component({
   selector: 'app-register',
@@ -14,7 +15,7 @@ export class Register implements OnInit {
   password = '';
   registerBtnClicked: boolean = false;
 
-  constructor(private router: Router, private authService: AuthService) { }
+  constructor(private router: Router, private authService: AuthService, private loaderService: LoaderService) { }
 
   ngOnInit(): void {
     if (this.authService.isLoggedIn()) {
@@ -27,9 +28,10 @@ export class Register implements OnInit {
       alert('Please enter a valid username and password');
       return;
     }
-
     if(this.registerBtnClicked) return;
     this.registerBtnClicked = true;
+
+    this.loaderService.show();
 
     const user = {
       username: this.username?.trim(),
@@ -40,10 +42,12 @@ export class Register implements OnInit {
       next: (response) => {
         alert(response);
         this.registerBtnClicked = false;
+        this.loaderService.hide();
       },
       error: (error) => {
         alert(error?.error?.message);
         this.registerBtnClicked = false;
+        this.loaderService.hide();
       }
     });
   }
