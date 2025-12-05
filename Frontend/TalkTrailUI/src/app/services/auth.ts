@@ -44,7 +44,7 @@ export class AuthService {
     try {
       return jwtDecode(token);
     } catch (error) {
-      console.error('Invalid token:', error);
+      console.log('Invalid token:', error);
       return null;
     }
   }

@@ -6,11 +6,11 @@ import { CommonModule } from '@angular/common';
   selector: 'app-sidebar',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './sidebar.html',
-  styleUrl: './sidebar.scss'
+  templateUrl: './sidebar.component.html',
+  styleUrls: ['./sidebar.component.scss']
 })
-export class Sidebar {
-  @Input() user: any;
+export class SidebarComponent{
+  @Input() user: string | null = null;
   @Input() users: any[] = [];
   @Input() groups: any[] = [];
   @Input() selectedUser: any;
@@ -19,8 +19,7 @@ export class Sidebar {
   @Output() selectUser = new EventEmitter<any>();
   @Output() selectGroup = new EventEmitter<any>();
   @Output() logoutEvent = new EventEmitter<void>();
-  @Output() searchEvent = new EventEmitter<string>();
-  @Output() loadAllUsers = new EventEmitter<void>();
+  @Output() searchEvent = new EventEmitter<string>();   // only search text
 
   activeTab: 'users' | 'groups' = 'users';
   searchUser = '';
@@ -38,12 +37,13 @@ export class Sidebar {
   }
 
   onSearch() {
-    this.searchEvent.emit(this.searchUser);
+    this.searchEvent.emit(this.searchUser.trim());
   }
 
-  onInputChange(){
-    if(!this.searchUser){
-      this.loadAllUsers.emit();
+  onInputChange(value: string) {
+    this.searchUser = value;
+    if (!value.trim()) {
+      this.searchEvent.emit('');
     }
   }
 }

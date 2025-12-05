@@ -1,22 +1,21 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChatService } from '../services/chat';
 import { ChatWindow } from './components/chat-window/chat-window';
-import { Sidebar } from './components/sidebar/sidebar';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { AuthService } from '../services/auth';
 import { Router } from '@angular/router';
-
 
 @Component({
   selector: 'app-chat-page',
   standalone: true,
-  imports: [CommonModule, Sidebar, ChatWindow],
+  imports: [CommonModule, SidebarComponent, ChatWindow],
   templateUrl: './chat.page.html',
-  styleUrl: './chat.page.scss'
+  styleUrls: ['./chat.page.scss']
 })
 export class ChatPage implements OnInit, OnDestroy {
 
-  user: any = "";
+  userName: string | null = null;
   users: any[] = [];
   groups: any[] = [];
   selectedUser: any = null;
@@ -25,16 +24,21 @@ export class ChatPage implements OnInit, OnDestroy {
 
   private pollIntervalId: any = null;
 
-  constructor(private chatService: ChatService, private authService: AuthService, private router: Router) { }
+  constructor(
+    private chatService: ChatService,
+    private authService: AuthService,
+    private router: Router,
+    private cd: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     if (!this.authService.isLoggedIn()) {
       this.router.navigate(['/']);
+      return;
     }
 
-    this.user = this.authService.getUserName();
+    this.userName = this.authService.getUserName();
     this.loadAllUsers();
-    // this.loadGroups();
   }
 
   ngOnDestroy(): void {
@@ -43,30 +47,32 @@ export class ChatPage implements OnInit, OnDestroy {
 
   loadAllUsers() {
     this.authService.getUsers().subscribe({
-      next: (res) => this.users = Array.isArray(res) ? res : res.users ?? [],
-      error: () => console.error('Error fetching users')
-    });
-  }
-
-  loadGroups() {
-    this.chatService.getGroups().subscribe({
-      next: (res) => (this.groups = res),
-      error: (err) => alert('Error fetching groups')
+      next: (res) => {
+        const data = Array.isArray(res) ? res : res.users ?? [];
+        this.users = [...data];
+        this.cd.detectChanges();
+      },
+      error: (error) => {
+        console.log('Error fetching users: ', error);
+      }
     });
   }
 
   onSearchUsers(username: string) {
-    if (!username || username.trim() === '') {
-      alert("Please enter a valid username");
+    const term = (username || '').trim();
+    if (!term) {
+      this.loadAllUsers();
       return;
     }
-    this.authService.getUserByUsername(username.trim()).subscribe({
+    this.authService.getUserByUsername(term).subscribe({
       next: (res) => {
-        this.users = Array.isArray(res) ? res : [res];        
+        this.users = Array.isArray(res) ? res : [res];
+        this.cd.detectChanges();
       },
       error: (error) => {
         this.users = [];
-        alert(error.error);
+        this.cd.detectChanges();
+        alert(error.error || 'User not found');
       }
     });
   }
@@ -91,18 +97,20 @@ export class ChatPage implements OnInit, OnDestroy {
     this.authService.logout();
   }
 
-
   fetchUserMessages(userId: number) {
     this.chatService.getChatMessages(userId).subscribe({
-      next: (res) => (this.messages = Array.isArray(res) ? res : res.messages || []),
-      error: (err) => console.error('Error fetching user messages', err)
+      next: (res) => {
+        this.messages = Array.isArray(res) ? res : res.messages || [];
+        this.cd.detectChanges();
+      },
+      error: (err) => console.log('Error fetching user messages', err)
     });
   }
 
   fetchGroupMessages(groupId: number) {
     this.chatService.getGroupMessages(groupId).subscribe({
       next: (res) => (this.messages = Array.isArray(res) ? res : res.messages || []),
-      error: (err) => console.error('Error fetching group messages', err)
+      error: (err) => console.log('Error fetching group messages', err)
     });
   }
 
@@ -110,7 +118,6 @@ export class ChatPage implements OnInit, OnDestroy {
     if (!text.trim()) return;
 
     if (this.selectedUser) {
-      console.log(this.selectedUser,text);
       this.chatService.sendMessage(this.selectedUser.id, text).subscribe({
         next: (res) => {
           const msg = res.data || res;
@@ -143,17 +150,14 @@ export class ChatPage implements OnInit, OnDestroy {
     }
   }
 
-  // POLLING 
-
   startPolling() {
     this.clearPolling();
-
     if (!(this.selectedUser || this.selectedGroup)) return;
 
     this.pollIntervalId = setInterval(() => {
       if (this.selectedUser) this.fetchUserMessages(this.selectedUser.id);
       if (this.selectedGroup) this.fetchGroupMessages(this.selectedGroup.id);
-    }, 1000); // 1 second like your React code
+    }, 1000);
   }
 
   clearPolling() {

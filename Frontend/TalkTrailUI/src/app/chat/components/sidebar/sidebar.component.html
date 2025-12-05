@@ -8,6 +8,7 @@
     <div class="tab" [class.active]="activeTab === 'users'" (click)="switchTab('users')">
       Users
     </div>
+    <!-- enable later if you want groups -->
     <!-- <div class="tab" [class.active]="activeTab === 'groups'" (click)="switchTab('groups')">
       Groups
     </div> -->
@@ -16,9 +17,9 @@
   <div *ngIf="activeTab === 'users'" class="search-area">
     <input
       class="search-input"
-      placeholder="Search users..."
+      placeholder="Search user"
       [(ngModel)]="searchUser"
-      (input)="onInputChange()"
+      (ngModelChange)="onInputChange($event)"
       (keydown.enter)="onSearch()" />
     <button class="search-button" (click)="onSearch()">Search</button>
   </div>
@@ -34,7 +35,7 @@
     </div>
   </div>
 
-  <!-- Groups list -->
+  <!-- Groups list (for later) -->
   <div class="items-list" *ngIf="activeTab === 'groups'">
     <div
       class="list-item"

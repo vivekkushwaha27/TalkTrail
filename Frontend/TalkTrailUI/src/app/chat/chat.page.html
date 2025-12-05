@@ -1,6 +1,6 @@
 <div class="chat-container">
   <app-sidebar
-    [user]="user"
+    [user]="userName"
     [users]="users"
     [groups]="groups"
     [selectedUser]="selectedUser"
@@ -9,11 +9,10 @@
     (selectGroup)="onSelectGroup($event)"
     (logoutEvent)="onLogout()"
     (searchEvent)="onSearchUsers($event)"
-    (loadAllUsers)="loadAllUsers()"
   ></app-sidebar>
 
   <app-chat-window
-    [currentUser]="user"
+    [currentUser]="userName"
     [selectedUser]="selectedUser"
     [selectedGroup]="selectedGroup"
     [messages]="messages"
