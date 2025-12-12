@@ -25,7 +25,7 @@ export class Login implements OnInit {
 
   login() {
     if (!this.username?.trim() || !this.password?.trim()) {
-      console.log('Please enter a valid username and password');
+      alert('Please enter a valid username and password');
       return;
     }
     if (this.loginBtnClicked) return;
